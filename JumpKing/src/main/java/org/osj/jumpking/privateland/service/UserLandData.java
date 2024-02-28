@@ -1,6 +1,10 @@
 package org.osj.jumpking.privateland.service;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.osj.jumpking.JumpKing;
+import org.osj.jumpking.db.ConfigManager;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -9,19 +13,40 @@ import java.util.UUID;
 
 public class UserLandData
 {
-    private HashMap<UUID, List<Chunk>> userLandData = new HashMap<>();
+    FileConfiguration landConfig = JumpKing.getConfigManager().getConfig("privateland");
+    private HashMap<UUID, List<Long>> userLandDataMap = new HashMap<>();
+
+    public UserLandData()
+    {
+        loadFromConfig();
+    }
 
     public void addLand(UUID uuid, Chunk chunk)
     {
-        if(userLandData.get(uuid) == null)
+        if(userLandDataMap.get(uuid) == null)
         {
-            List<Chunk> newChunkList = new LinkedList<>();
-            newChunkList.add(chunk);
-            userLandData.put(uuid, newChunkList);
+            List<Long> newChunkList = new LinkedList<>();
+            newChunkList.add(chunk.getChunkKey());
+            userLandDataMap.put(uuid, newChunkList);
         }
         else
         {
-            userLandData.get(uuid).add(chunk);
+            userLandDataMap.get(uuid).add(chunk.getChunkKey());
+        }
+
+        landConfig.set("chunks." + chunk.getChunkKey(), uuid.toString());
+        JumpKing.getConfigManager().saveConfig("privateland");
+    }
+
+    private void loadFromConfig()
+    {
+        // Config에 청크 키 값들 저장해서 해시맵에 다시 다 집어넣기
+        List<String> configChunkKeyList = landConfig.getConfigurationSection("chunks.").getKeys(true).stream().toList();
+        for(int i = 0; i < configChunkKeyList.size(); i++)
+        {
+            UUID uuid = UUID.fromString(landConfig.getString("chunks." + configChunkKeyList.get(i)));
+            Chunk chunk = Bukkit.getWorld("village").getChunkAt(Long.parseLong(configChunkKeyList.get(i)));
+            addLand(uuid, chunk);
         }
     }
 
@@ -32,12 +57,14 @@ public class UserLandData
             return;
         }
 
-        userLandData.get(uuid).remove(chunk);
+        userLandDataMap.get(uuid).remove(chunk.getChunkKey());
+        landConfig.set("chunks." + chunk.getChunkKey(), null);
+        JumpKing.getConfigManager().saveConfig("privateland");
     }
 
     public boolean containLand(UUID player, Chunk chunk)
     {
-        if(!userLandData.containsKey(player) || !userLandData.get(player).contains(chunk))
+        if(!userLandDataMap.containsKey(player) || !userLandDataMap.get(player).contains(chunk.getChunkKey()))
         {
             return false;
         }
@@ -47,9 +74,9 @@ public class UserLandData
 
     public boolean containLandAllOfPlayer(Chunk chunk)
     {
-        for(UUID key : userLandData.keySet())
+        for(UUID key : userLandDataMap.keySet())
         {
-            if(userLandData.get(key).contains(chunk))
+            if(userLandDataMap.get(key).contains(chunk.getChunkKey()))
             {
                 return true;
             }

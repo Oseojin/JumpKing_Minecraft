@@ -4,7 +4,6 @@ import org.osj.jumpking.JumpKing;
 import org.osj.jumpking.privateland.controller.commands.LandPurchaseCommand;
 import org.osj.jumpking.privateland.controller.commands.LandRemoveCommand;
 import org.osj.jumpking.privateland.service.UserLandData;
-import org.osj.jumpking.user.management.controller.commands.UserInfoCommand;
 
 public class UserLandManagementController
 {

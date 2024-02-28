@@ -21,6 +21,8 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" scope="PROVIDED" name="Gradle: io.papermc.paper:paper-api:1.20.2-R0.1-SNAPSHOT" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.github.LoneDev6:API-ItemsAdder:3.6.2-beta-r3-b" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.mysql:mysql-connector-j:8.0.33" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Gradle: net.md-5:bungeecord-chat:1.20-R0.1-deprecated+build.14" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Gradle: com.google.guava:guava:32.1.2-jre" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Gradle: net.kyori:adventure-text-logger-slf4j:4.14.0" level="project" />
@@ -38,6 +40,7 @@
     <orderEntry type="library" scope="PROVIDED" name="Gradle: org.apache.maven:maven-resolver-provider:3.8.5" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Gradle: org.slf4j:slf4j-api:1.8.0-beta4" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Gradle: org.checkerframework:checker-qual:3.33.0" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.google.protobuf:protobuf-java:3.21.9" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Gradle: com.google.guava:failureaccess:1.0.1" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Gradle: com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Gradle: com.google.code.findbugs:jsr305:3.0.2" level="project" />

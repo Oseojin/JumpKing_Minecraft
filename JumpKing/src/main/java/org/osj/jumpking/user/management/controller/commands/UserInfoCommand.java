@@ -31,13 +31,11 @@ public class UserInfoCommand implements CommandExecutor
 
         player.sendMessage("---------------------------------");
         player.sendMessage(String.format("이름 : %s", playerData.getDisplayName()));
-        player.sendMessage(String.format("직업 : %s", playerData.getJob()));
-        player.sendMessage(String.format("랭크 : %s", playerData.getRank()));
         player.sendMessage(String.format("칭호 : %s", playerData.getPrefix()));
-        player.sendMessage(String.format("소지 금액 : %s", playerData.getMoney()));
+        player.sendMessage(String.format("소지 금액 : %s", playerData.getGold()));
+        player.sendMessage(String.format("소지 코인 : %s", playerData.getJumpingCoin()));
+        player.sendMessage(String.format("최고 도달 높이 : %s", playerData.getMaxHeight()));
         player.sendMessage("---------------------------------");
-
-        playerData.setMoney(playerData.getMoney() + 10L);
 
         return false;
     }

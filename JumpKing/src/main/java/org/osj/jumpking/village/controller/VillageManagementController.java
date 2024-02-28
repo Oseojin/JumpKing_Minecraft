@@ -1,7 +1,6 @@
 package org.osj.jumpking.village.controller;
 
 import org.osj.jumpking.JumpKing;
-import org.osj.jumpking.privateland.service.UserLandData;
 
 public class VillageManagementController
 {
@@ -19,6 +18,7 @@ public class VillageManagementController
     {
         serverInstance.getServer().getPluginManager().registerEvents(new UserUsePortalInVillage(), serverInstance);
         serverInstance.getServer().getPluginManager().registerEvents(new InteractVillage(serverInstance.getUserLandManagement().getUserLandData()), serverInstance);
+        serverInstance.getServer().getPluginManager().registerEvents(new UseVillageReturn(), serverInstance);
     }
     private void registerCommands()
     {

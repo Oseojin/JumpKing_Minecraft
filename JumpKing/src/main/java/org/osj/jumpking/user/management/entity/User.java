@@ -1,5 +1,9 @@
 package org.osj.jumpking.user.management.entity;
 
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.osj.jumpking.db.db_connect;
+
 import java.util.UUID;
 
 public class User
@@ -7,25 +11,48 @@ public class User
     private UUID uuid;
     private String displayName;
 
-    private String rank;
+    private Long gold;
+    private Long jumpingCoin;
 
-    private Long money;
-
-    private Long maxHeight;
-
-    private String job;
+    private int maxHeight;
 
     private String prefix;
 
-    public User(UUID uuid, String displayName, String rank, Long money, Long maxHeight, String job, String prefix)
+    public User(UUID uuid, String displayName, Long gold, Long jumpingCoin, Integer maxHeight)
     {
         this.uuid = uuid;
         this.displayName = displayName;
-        this.rank = rank;
-        this.money = money;
-        this.job = job;
-        this.prefix = prefix;
+        this.gold = gold;
+        this.jumpingCoin = jumpingCoin;
         this.maxHeight = maxHeight;
+        changePrefix();
+    }
+
+    private void changePrefix()
+    {
+        if(maxHeight < 50)
+        {
+            prefix = ChatColor.YELLOW + "";
+        }
+        else if(maxHeight < 100)
+        {
+            prefix = ChatColor.GREEN + "";
+        }
+        else if(maxHeight < 150)
+        {
+            prefix = ChatColor.AQUA + "";
+        }
+        else if(maxHeight < 200)
+        {
+            prefix = ChatColor.BLUE + "";
+        }
+        else if(maxHeight < 250)
+        {
+            prefix = ChatColor.RED + "";
+        }
+
+        prefix += "[" + maxHeight + "m]";
+        Bukkit.getPlayer(uuid).setPlayerListName(prefix + ChatColor.WHITE + displayName);
     }
 
     public String getPrefix()
@@ -35,14 +62,6 @@ public class User
     public void setPrefix(String prefix)
     {
         this.prefix = prefix;
-    }
-    public String getJob()
-    {
-        return job;
-    }
-    public void setJob(String job)
-    {
-        this.job = job;
     }
     public UUID getUuid()
     {
@@ -56,32 +75,54 @@ public class User
     {
         return displayName;
     }
-    public void setDisplayName(String displayName)
+    public void loadDisplayName(String displayName)
     {
         this.displayName = displayName;
     }
-    public String getRank()
+    public void setDisplayName(String displayName)
     {
-        return rank;
+        this.displayName = displayName;
+        db_connect.getInstance().SetDisplayName(Bukkit.getPlayer(uuid), this.displayName);
     }
-    public void setRank(String rank)
+    public Long getJumpingCoin()
     {
-        this.rank = rank;
+        return jumpingCoin;
     }
-    public Long getMoney()
+    public void loadJumpingCoin(Long jumpingCoin)
     {
-        return money;
+        this.jumpingCoin = jumpingCoin;
     }
-    public void setMoney(Long money)
+    public void setJumpingCoin(Long jumpingCoin)
     {
-        this.money = money;
+        this.jumpingCoin = jumpingCoin;
+        db_connect.getInstance().SetJumpingCoin(Bukkit.getPlayer(uuid), this.jumpingCoin);
     }
-    public Long getMaxHeight()
+    public Long getGold()
+    {
+        return gold;
+    }
+    public void loadGold(Long gold)
+    {
+        this.gold = gold;
+    }
+    public void setGold(Long gold)
+    {
+        this.gold = gold;
+        db_connect.getInstance().SetGold(Bukkit.getPlayer(uuid), this.gold);
+    }
+    public Integer getMaxHeight()
     {
         return maxHeight;
     }
-    public void setMaxHeight(Long maxHeight)
+    public void loadMaxHeight(Integer maxHeight)
     {
         this.maxHeight = maxHeight;
+        changePrefix();
+    }
+    public void setMaxHeight(Integer maxHeight)
+    {
+        this.maxHeight = maxHeight;
+        db_connect.getInstance().SetMaxHeight(Bukkit.getPlayer(uuid), this.maxHeight);
+        changePrefix();
     }
 }

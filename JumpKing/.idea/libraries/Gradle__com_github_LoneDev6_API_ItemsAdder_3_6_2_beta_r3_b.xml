@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="Gradle: com.github.LoneDev6:API-ItemsAdder:3.6.2-beta-r3-b" type="java-imported" external-system-id="GRADLE">
+    <properties groupId="com.github.LoneDev6" artifactId="API-ItemsAdder" version="3.6.2-beta-r3-b" />
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.LoneDev6/API-ItemsAdder/3.6.2-beta-r3-b/ddb32d2cf45d3eed4e320d3271f136633f33cce/API-ItemsAdder-3.6.2-beta-r3-b.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.LoneDev6/API-ItemsAdder/3.6.2-beta-r3-b/83c8daf1a3a7a1f4a4cdb1ae21fb629cc1fbcd6f/API-ItemsAdder-3.6.2-beta-r3-b-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

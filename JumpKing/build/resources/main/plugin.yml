@@ -12,3 +12,10 @@ commands:
   removeLand:
     description: remove chunk
     aliases: 땅제거
+  shopTest:
+    description: shopTest
+    aliases: 상점테스트
+  invite:
+    description: invite user
+    aliases: 초대
+  test:

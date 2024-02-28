@@ -14,11 +14,9 @@ public class UserManager
         User newUser = new User(
                 player.getUniqueId(),
                 player.getDisplayName(),
-                "newbie",
-                1000L,
                 0L,
-                "jobless",
-                "[뉴비]"
+                0L,
+                0
         );
 
         onlineUserData.put(player, newUser);
