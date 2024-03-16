@@ -45,6 +45,9 @@ public class ShopManagementController
     private void registerEvents()
     {
         serverInstance.getServer().getPluginManager().registerEvents(new MineralShop(), serverInstance);
+        serverInstance.getServer().getPluginManager().registerEvents(new CropShop(), serverInstance);
+        serverInstance.getServer().getPluginManager().registerEvents(new MonsterShop(), serverInstance);
+        serverInstance.getServer().getPluginManager().registerEvents(new AnimalShop(), serverInstance);
         serverInstance.getServer().getPluginManager().registerEvents(new WildGoldRandomBoxShop(), serverInstance);
         serverInstance.getServer().getPluginManager().registerEvents(new JumpmapGoldRandomBoxShop(), serverInstance);
         serverInstance.getServer().getPluginManager().registerEvents(new WildJumpingRandomBoxShop(), serverInstance);

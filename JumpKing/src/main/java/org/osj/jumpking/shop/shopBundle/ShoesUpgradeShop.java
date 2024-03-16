@@ -4,6 +4,8 @@ import dev.lone.itemsadder.api.CustomStack;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.Sound;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -154,8 +156,6 @@ public class ShoesUpgradeShop implements Listener
                 int lv = ShoesStatManager.getShoesLv(customStack.getItemStack());
                 List<Integer> resourceList = getUpgradeStat(lv);
 
-                player.sendMessage("신발: " + resourceList.get(0) + " " + resourceList.get(1) + " " + resourceList.get(2) + " " + resourceList.get(3));
-
                 priceReload(upgradeButton_noTicket, resourceList.get(0), resourceList.get(1), resourceList.get(2), resourceList.get(3), false);
                 priceReload(upgradeButton_onTicket, resourceList.get(0), resourceList.get(1), resourceList.get(2), resourceList.get(3), true);
 
@@ -202,62 +202,62 @@ public class ShoesUpgradeShop implements Listener
         {
             case 0:
                 resourceList.add(1);
-                resourceList.add(2500);
+                resourceList.add(25000);
                 resourceList.add(0);
                 resourceList.add(100);
                 break;
             case 1:
-                resourceList.add(2);
-                resourceList.add(5000);
+                resourceList.add(3);
+                resourceList.add(25000);
                 resourceList.add(0);
                 resourceList.add(90);
                 break;
             case 2:
-                resourceList.add(4);
-                resourceList.add(7500);
-                resourceList.add(500);
+                resourceList.add(5);
+                resourceList.add(25000);
+                resourceList.add(0);
                 resourceList.add(80);
                 break;
             case 3:
-                resourceList.add(8);
-                resourceList.add(10000);
-                resourceList.add(1000);
+                resourceList.add(10);
+                resourceList.add(50000);
+                resourceList.add(2500);
                 resourceList.add(70);
                 break;
             case 4:
-                resourceList.add(16);
-                resourceList.add(20000);
-                resourceList.add(1000);
+                resourceList.add(15);
+                resourceList.add(50000);
+                resourceList.add(2500);
                 resourceList.add(60);
                 break;
             case 5:
-                resourceList.add(24);
-                resourceList.add(30000);
-                resourceList.add(3000);
+                resourceList.add(20);
+                resourceList.add(50000);
+                resourceList.add(2500);
                 resourceList.add(50);
                 break;
             case 6:
-                resourceList.add(32);
-                resourceList.add(40000);
-                resourceList.add(4000);
+                resourceList.add(30);
+                resourceList.add(75000);
+                resourceList.add(5000);
                 resourceList.add(40);
                 break;
             case 7:
                 resourceList.add(40);
-                resourceList.add(50000);
+                resourceList.add(75000);
                 resourceList.add(5000);
                 resourceList.add(30);
                 break;
             case 8:
-                resourceList.add(52);
+                resourceList.add(50);
                 resourceList.add(75000);
-                resourceList.add(7500);
+                resourceList.add(5000);
                 resourceList.add(20);
                 break;
             case 9:
                 resourceList.add(64);
                 resourceList.add(100000);
-                resourceList.add(10000);
+                resourceList.add(7500);
                 resourceList.add(10);
                 break;
             default:
@@ -282,11 +282,13 @@ public class ShoesUpgradeShop implements Listener
         if(user.getGold() < gold || user.getJumpingCoin() < jumpingCoin || !player.getInventory().containsAtLeast(CustomItemManager.reinforceStone.getItemStack(), needStoneNum))
         {
             player.sendMessage(ChatColor.RED + "재료가 부족합니다.");
+            player.playSound(player, Sound.ITEM_SHIELD_BLOCK, 1f, 1f);
             return;
         }
         if(useTicket && !player.getInventory().containsAtLeast(CustomItemManager.downPreventTicket.getItemStack(), 1))
         {
             player.sendMessage(ChatColor.RED + "단계 하락 방지권이 없습니다.");
+            player.playSound(player, Sound.ITEM_SHIELD_BLOCK, 1f, 1f);
             return;
         }
 
@@ -317,8 +319,25 @@ public class ShoesUpgradeShop implements Listener
 
         Random random = new Random();
         int upgradeRandom = random.nextInt(100) + 1;
+        if(useTicket)
+        {
+            for(int i = 0; i < player.getInventory().getSize(); i++)
+            {
+                ItemStack currItem = player.getInventory().getItem(i);
+                if (currItem == null)
+                {
+                    continue;
+                }
+                if (currItem.isSimilar(CustomItemManager.downPreventTicket.getItemStack()))
+                {
+                    currItem.setAmount(currItem.getAmount()-1);
+                    break;
+                }
+            }
+        }
         if(upgradeRandom <= prob) // 강화성공
         {
+            player.playSound(player, Sound.BLOCK_ANVIL_USE, 1f, 1f);
             eventInv.remove(playerShoes);
             ItemMeta shoesMeta = playerShoes.getItemMeta();
             shoesMeta.setDisplayName(ChatColor.GREEN + "점핑슈즈[+" + (lv+1) + "]");
@@ -328,22 +347,10 @@ public class ShoesUpgradeShop implements Listener
         }
         else // 강화 실패
         {
+            player.playSound(player, Sound.ITEM_SHIELD_BREAK, 1f, 1f);
             player.sendMessage(ChatColor.RED + "강화가 실패하였습니다.. " + ChatColor.RED + "(-" + needStoneNum + " 강화석)" + ChatColor.GOLD + "(-" + gold + "G)" + ChatColor.GREEN + "(-" + jumpingCoin + "JC)");
             if(useTicket)
             {
-                for(int i = 0; i < player.getInventory().getSize(); i++)
-                {
-                    ItemStack currItem = player.getInventory().getItem(i);
-                    if (currItem == null)
-                    {
-                        continue;
-                    }
-                    if (currItem.isSimilar(CustomItemManager.downPreventTicket.getItemStack()))
-                    {
-                        currItem.setAmount(currItem.getAmount()-1);
-                    }
-                }
-
                 eventInv.remove(playerShoes);
                 eventInv.setItem(25, playerShoes);
                 player.sendMessage(ChatColor.AQUA + "단계 하락 방지권을 사용하여 단계가 하락하지 않습니다.");

@@ -23,6 +23,7 @@ public class CustomItemManager implements Listener
     public static CustomStack shiningStone;
     public static CustomStack downPreventTicket;
     public static CustomStack userInviteTicket;
+    public static CustomStack goldBundle;
 
     @EventHandler
     public void onItemsAdderLoaded(ItemsAdderLoadDataEvent event)
@@ -43,5 +44,6 @@ public class CustomItemManager implements Listener
         shiningStone = CustomStack.getInstance("jumpking:shining_stone");
         downPreventTicket = CustomStack.getInstance("jumpking:down_prevent_ticket");
         userInviteTicket = CustomStack.getInstance("jumpking:user_invite_ticket");
+        goldBundle = CustomStack.getInstance("jumpking:gold_bundle");
     }
 }

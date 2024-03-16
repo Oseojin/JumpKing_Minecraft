@@ -40,6 +40,12 @@ public class LandPurchaseCommand implements CommandExecutor
             return false;
         }
 
+        if((currChunk.getX() <= 5 && currChunk.getX() >= -6) && (currChunk.getZ() <= 5 && currChunk.getZ() >= -6))
+        {
+            player.sendMessage(ChatColor.RED + "로비 구역입니다!");
+            return false;
+        }
+
         // 땅 구매 증서 있는지 확인
         if(player.getInventory().containsAtLeast(CustomItemManager.landPurchaseTicket.getItemStack(), 1))
         {

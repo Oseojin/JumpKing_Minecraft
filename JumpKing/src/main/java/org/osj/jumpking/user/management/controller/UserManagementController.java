@@ -2,8 +2,7 @@ package org.osj.jumpking.user.management.controller;
 
 import org.osj.jumpking.JumpKing;
 import org.osj.jumpking.user.*;
-import org.osj.jumpking.user.management.controller.commands.UserInfoCommand;
-import org.osj.jumpking.user.management.controller.commands.UserInviteCommand;
+import org.osj.jumpking.user.management.controller.commands.*;
 import org.osj.jumpking.user.management.service.UserManager;
 
 public class UserManagementController
@@ -44,10 +43,12 @@ public class UserManagementController
         serverInstance.getServer().getPluginManager().registerEvents(new UsePouch(), serverInstance);
         serverInstance.getServer().getPluginManager().registerEvents(new PlayerFishing(), serverInstance);
         serverInstance.getServer().getPluginManager().registerEvents(new UseEnchantRandom(), serverInstance);
+        serverInstance.getServer().getPluginManager().registerEvents(new UseGoldBundle(), serverInstance);
     }
     private void registerCommands()
     {
         serverInstance.getServer().getPluginCommand("uinfo").setExecutor(new UserInfoCommand(userManager));
         serverInstance.getServer().getPluginCommand("invite").setExecutor(new UserInviteCommand());
+        serverInstance.getServer().getPluginCommand("issuegoldbundle").setExecutor(new IssueGoldBundleCommand());
     }
 }

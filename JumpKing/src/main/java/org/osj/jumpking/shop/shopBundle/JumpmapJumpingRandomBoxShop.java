@@ -29,7 +29,7 @@ public class JumpmapJumpingRandomBoxShop implements Listener
         {
             inv.setItem(22, CustomItemManager.jumpmapJumpingRandomBox.getItemStack());
         }
-        priceReload(priceJumpingRandomBox, 1000);
+        priceReload(priceJumpingRandomBox, 500);
         inv.setItem(31, priceJumpingRandomBox);
     }
 

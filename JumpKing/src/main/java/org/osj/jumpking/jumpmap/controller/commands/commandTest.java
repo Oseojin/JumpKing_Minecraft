@@ -1,9 +1,5 @@
 package org.osj.jumpking.jumpmap.controller.commands;
 
-import dev.lone.itemsadder.api.CustomStack;
-import org.bukkit.Bukkit;
-import org.bukkit.Chunk;
-import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -13,8 +9,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.jetbrains.annotations.NotNull;
-import org.osj.jumpking.JumpKing;
-import org.osj.jumpking.shop.shopBundle.ShoesUpgradeShop;
 
 public class commandTest implements CommandExecutor, Listener
 {
@@ -31,11 +25,6 @@ public class commandTest implements CommandExecutor, Listener
         }
 
         click = !click;
-
-        //new ShoesUpgradeShop().open(player);
-
-        double x = player.getLocation().getX();
-        double z = player.getLocation().getZ();
 
         return false;
     }

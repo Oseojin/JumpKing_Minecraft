@@ -2,9 +2,8 @@ package org.osj.jumpking.jumpmap.controller;
 
 import com.destroystokyo.paper.event.player.PlayerJumpEvent;
 import dev.lone.itemsadder.api.CustomStack;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
+import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -12,10 +11,14 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
-import org.bukkit.util.Vector;
+import org.osj.jumpking.CustomItemManager;
 import org.osj.jumpking.JumpKing;
+import org.osj.jumpking.SpawnLocManager;
 import org.osj.jumpking.jumpmap.ShoesStatManager;
 import org.osj.jumpking.user.management.controller.UserManagementController;
 import org.osj.jumpking.user.management.entity.User;
@@ -24,7 +27,7 @@ import java.util.HashMap;
 
 public class UserJump implements Listener
 {
-    private HashMap<Player, Integer> playerMaxHeight = new HashMap<>();
+    private static HashMap<Player, Integer> playerMaxHeight = new HashMap<>();
     private HashMap<Player, Long> playerJumpHolding = new HashMap<>();
     private HashMap<Player, BukkitTask> playerBukkitTask = new HashMap<>();
     private final JumpKing serverInstance;
@@ -127,23 +130,79 @@ public class UserJump implements Listener
             {
                 jumpPower = (holdingTime % maxHoldingTime) / maxHoldingTime * shoesLv;
             }
+            if(jumpPower == shoesLv)
+            {
+                player.playSound(player, Sound.ENTITY_GENERIC_EXPLODE, 1f, 1f);
+            }
+            else
+            {
+                player.playSound(player, Sound.ENTITY_FIREWORK_ROCKET_BLAST, 1f, 1f);
+            }
             //player.sendMessage("누르고 있던 시간: " + holdingTime + " 점프 힘: " + jumpPower);
             player.setVelocity(player.getLocation().getDirection().multiply(jumpPower));
         }
     }
 
+    public static void UpdateMaxHeight(Player player)
+    {
+        User user = UserManagementController.getUserManager().getUserData(player);
+        
+        int currHeight = playerMaxHeight.get(player);
+        double multiply = 1.0;
+        
+        if(currHeight < 50)
+        {
+            currHeight -= 0;
+            multiply = 1.0;
+        }
+        else if(currHeight < 100)
+        {
+            currHeight -= 50;
+            multiply = 1.5;
+        }
+        else if (currHeight < 150)
+        {
+            currHeight -= 100;
+            multiply = 2.0;
+        }
+        else if(currHeight < 200)
+        {
+            currHeight -= 150;
+            multiply = 2.5;
+        }
+        else if(currHeight < 250)
+        {
+            currHeight -= 200;
+            multiply = 3.0;
+        }
+        else
+        {
+            currHeight -= 250;
+            multiply = 3.5;
+        }
+
+
+        long giveJumpingCoin = (long)(currHeight * multiply);
+
+        user.setJumpingCoin(user.getJumpingCoin() + giveJumpingCoin);
+
+        player.sendMessage(ChatColor.GREEN + "올라간 높이: " + playerMaxHeight.get(player) + " 획득한 코인: " + giveJumpingCoin);
+
+        if(user.getMaxHeight() < playerMaxHeight.get(player))
+        {
+            user.setMaxHeight(playerMaxHeight.get(player));
+        }
+        playerMaxHeight.put(player, 0);
+    }
+
     @EventHandler
     public void PlayerFallDeath(PlayerDeathEvent event)
     {
+        User user = UserManagementController.getUserManager().getUserData(event.getPlayer());
+
         if(event.getPlayer().getWorld().getName().equals("JUMPMAP"))
         {
-            User user = UserManagementController.getUserManager().getUserData(event.getPlayer());
-            user.setJumpingCoin(user.getJumpingCoin() + playerMaxHeight.get(event.getPlayer()));
-            if(user.getMaxHeight() < playerMaxHeight.get(event.getPlayer()))
-            {
-                user.setMaxHeight(playerMaxHeight.get(event.getPlayer()));
-            }
-            playerMaxHeight.put(event.getPlayer(), 0);
+            UpdateMaxHeight(event.getPlayer());
             event.setCancelled(true);
 
             new BukkitRunnable()
@@ -151,42 +210,10 @@ public class UserJump implements Listener
                 @Override
                 public void run()
                 {
-                    event.getPlayer().teleport(getSpawnLoc(user.getMaxHeight()));
+                    event.getPlayer().teleport(SpawnLocManager.getJumpmapSpawnLoc(user.getMaxHeight()));
                 }
             }.runTaskLater(serverInstance, 1L);
         }
-    }
-
-    public static Location getSpawnLoc(int maxHeight)
-    {
-        Location spawnLoc;
-        World world = Bukkit.getWorld("JUMPMAP");
-        if(maxHeight < 50)
-        {
-            spawnLoc = new Location(world, -42, -60, -13);
-        }
-        else if(maxHeight < 100)
-        {
-            spawnLoc = new Location(world, -42, -10, -13);
-        }
-        else if(maxHeight < 150)
-        {
-            spawnLoc = new Location(world, -42, 40, -13);
-        }
-        else if(maxHeight < 200)
-        {
-            spawnLoc = new Location(world, 0, -60, 0);
-        }
-        else if(maxHeight < 250)
-        {
-            spawnLoc = new Location(world, 0, -60, 0);
-        }
-        else
-        {
-            spawnLoc = new Location(world, 0, -60, 0);
-        }
-
-        return spawnLoc;
     }
 
     @EventHandler
@@ -197,12 +224,53 @@ public class UserJump implements Listener
         {
             player.setWalkSpeed(0);
             player.setMaxHealth(2.0);
+
+            PotionEffect potionEffect = new PotionEffect(PotionEffectType.NIGHT_VISION, PotionEffect.INFINITE_DURATION, 1, false, false);
+            player.addPotionEffect(potionEffect);
+
+            boolean onShoes = false;
+
+            for(int i = 0; i < player.getInventory().getSize(); i++)
+            {
+                ItemStack currItem = player.getInventory().getItem(i);
+                if(currItem == null)
+                {
+                    continue;
+                }
+                CustomStack playerShoes = CustomStack.byItemStack(currItem);
+                // 커스텀 아이템인지 확인 && 신발 권한을 가지고 있으면 true
+                if(playerShoes != null && playerShoes.getPermission().equals("ia.jumpking:jumping_shoes"))
+                {
+                    onShoes = true;
+                    break;
+                }
+            }
+
+            if(!onShoes)
+            {
+                if(player.getInventory().getBoots() == null)
+                {
+                    player.sendMessage(ChatColor.GREEN + "점핑슈즈를 지급합니다!");
+                    player.getInventory().addItem(CustomItemManager.jumpingShoes.getItemStack());
+                }
+                else
+                {
+                    CustomStack playerShoes = CustomStack.byItemStack(player.getInventory().getBoots());
+                    // 커스텀 아이템인지 확인 || 신발 권한을 가지고 있지 않으면 반환
+                    if(playerShoes == null || !playerShoes.getPermission().equals("ia.jumpking:jumping_shoes"))
+                    {
+                        player.sendMessage(ChatColor.GREEN + "점핑슈즈를 지급합니다!");
+                        player.getInventory().addItem(CustomItemManager.jumpingShoes.getItemStack());
+                    }
+                }
+            }
         }
         else if(event.getFrom().getName().equals("JUMPMAP"))
         {
             player.setWalkSpeed(0.2f);
             player.setMaxHealth(20.0);
             player.setHealth(20.0);
+            player.removePotionEffect(PotionEffectType.NIGHT_VISION);
         }
     }
 

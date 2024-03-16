@@ -19,3 +19,12 @@ commands:
     description: invite user
     aliases: 초대
   test:
+  changename:
+    description: change name
+    aliases: 닉네임변경
+  changenameop:
+    description: change name op
+    aliases: 닉네임변경op
+  issuegoldbundle:
+    description: issue gold bundle
+    aliases: 출금

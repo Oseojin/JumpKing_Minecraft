@@ -44,7 +44,7 @@ public class User
         }
         else if(maxHeight < 200)
         {
-            prefix = ChatColor.BLUE + "";
+            prefix = ChatColor.LIGHT_PURPLE + "";
         }
         else if(maxHeight < 250)
         {

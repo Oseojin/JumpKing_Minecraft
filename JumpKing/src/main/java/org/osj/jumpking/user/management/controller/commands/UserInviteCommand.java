@@ -17,6 +17,11 @@ public class UserInviteCommand implements CommandExecutor
     {
         Player player = (Player) sender;
 
+        if(args.length != 1)
+        {
+            player.sendMessage(ChatColor.RED + "/초대 [플레이어 닉네임]");
+            return false;
+        }
 
         // 유저 초대 티켓 있는지 확인
         if(player.getInventory().containsAtLeast(CustomItemManager.userInviteTicket.getItemStack(), 1))
@@ -37,6 +42,7 @@ public class UserInviteCommand implements CommandExecutor
             JumpKing.getConfigManager().getConfig("whitelist").set("players." + args[0], true);
             JumpKing.getConfigManager().saveConfig("whitelist");
             player.sendMessage(ChatColor.GREEN + "유저를 성공적으로 초대했습니다.");
+            JumpKing.getConfigManager().reloadConfig("whitelist");
         }
         else
         {

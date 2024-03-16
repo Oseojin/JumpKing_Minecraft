@@ -26,6 +26,10 @@ public class PlayerDeath implements Listener
             for(int i = 0; i < event.getPlayer().getInventory().getSize(); i++)
             {
                 ItemStack currItem = event.getPlayer().getInventory().getItem(i);
+                if(currItem == null)
+                {
+                    continue;
+                }
                 if(currItem.isSimilar(CustomItemManager.inventorySaveTicket.getItemStack()))
                 {
                     currItem.setAmount(currItem.getAmount()-1);

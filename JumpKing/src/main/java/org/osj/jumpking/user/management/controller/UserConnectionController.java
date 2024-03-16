@@ -28,7 +28,7 @@ public class UserConnectionController implements Listener
         Player player = event.getPlayer();
         String playerName = player.getName();
 
-        if(!JumpKing.getConfigManager().getConfig("whitelist").contains("players."+playerName.toLowerCase()))
+        if(!JumpKing.getConfigManager().getConfig("whitelist").contains("players."+playerName))
         {
             event.disallow(PlayerLoginEvent.Result.KICK_OTHER, "초대받지 못했습니다!");
         }
@@ -43,6 +43,7 @@ public class UserConnectionController implements Listener
         if(db_connect.getInstance().insertMember(event.getPlayer()) == 0)
         {
             db_connect.getInstance().db_PlayerInfo(event.getPlayer());
+            event.getPlayer().setDisplayName(UserManagementController.getUserManager().getUserData(event.getPlayer()).getDisplayName());
             PlayerScoreBoard.setScoreboard(event.getPlayer());
         }
         else

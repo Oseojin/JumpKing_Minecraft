@@ -29,7 +29,7 @@ public class WildJumpingRandomBoxShop implements Listener
         {
             inv.setItem(22, CustomItemManager.wildJumpingRandomBox.getItemStack());
         }
-        priceReload(priceJumpingRandomBox, 500);
+        priceReload(priceJumpingRandomBox, 250);
         inv.setItem(31, priceJumpingRandomBox);
     }
 

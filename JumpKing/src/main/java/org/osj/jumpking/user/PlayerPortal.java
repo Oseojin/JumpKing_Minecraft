@@ -1,10 +1,14 @@
 package org.osj.jumpking.user;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerPortalEvent;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.osj.jumpking.JumpKing;
+import org.osj.jumpking.SpawnLocManager;
 import org.osj.jumpking.user.management.entity.User;
 import org.osj.jumpking.user.management.service.UserManager;
 
@@ -21,6 +25,8 @@ public class PlayerPortal implements Listener
     {
         if(event.getFrom().getWorld().getName().equals("JUMPMAP") || event.getFrom().getWorld().getName().equals("village"))
         {
+            event.setCancelled(true);
+            event.getPlayer().sendMessage(ChatColor.RED + "해당 월드에서는 포탈을 이용할 수 없습니다!");
             return;
         }
 

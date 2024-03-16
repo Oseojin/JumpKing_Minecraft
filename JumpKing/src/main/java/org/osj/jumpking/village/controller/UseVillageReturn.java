@@ -9,10 +9,10 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.osj.jumpking.CustomItemManager;
 import org.osj.jumpking.JumpKing;
+import org.osj.jumpking.SpawnLocManager;
 
 public class UseVillageReturn implements Listener
 {
-    private static Location villageSpawnLoc = new Location(Bukkit.getWorld("village"), 527, 72 ,-202);
     @EventHandler
     public void useVillageReturn(PlayerInteractEvent event)
     {
@@ -27,7 +27,7 @@ public class UseVillageReturn implements Listener
                     @Override
                     public void run()
                     {
-                        event.getPlayer().teleport(villageSpawnLoc);
+                        event.getPlayer().teleport(SpawnLocManager.villageSpawnLoc);
                     }
                 }.runTaskLater(JumpKing.getServerInstance(), 1L);
             }

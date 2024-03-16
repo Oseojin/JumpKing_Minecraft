@@ -41,6 +41,11 @@ public class UserLandData
     private void loadFromConfig()
     {
         // Config에 청크 키 값들 저장해서 해시맵에 다시 다 집어넣기
+        if(landConfig.getConfigurationSection("chunks.") == null)
+        {
+            return;
+        }
+
         List<String> configChunkKeyList = landConfig.getConfigurationSection("chunks.").getKeys(true).stream().toList();
         for(int i = 0; i < configChunkKeyList.size(); i++)
         {
